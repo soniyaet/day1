@@ -1,0 +1,33 @@
+body{  
+  font-family: Calibri;  
+  background-color:lightgold;  
+}  
+.form label {
+  display: inline-block;
+  text-align: right;
+ 
+}
+.form input {
+  display: inline-block;
+  text-align: left;
+  
+} 
+textarea {  
+  width: 50%;
+  height: 50%;  
+  padding: 15px;        
+  background: lightyellow ;  
+}  
+ div {  
+            padding: 10px 0;  
+         }    
+}  
+.registerbutton {  
+  background-color: green;  
+  text-align: center ;
+  color: orange;    
+  margin: 8px 0;  
+  border: none;  
+  cursor: pointer;  
+  width: 100%;    
+}   
