@@ -1,0 +1,178 @@
+mysql> CREATE DATABASE bank;
+mysql> USE bank;
+Database changed
+
+mysql> CREATE TABLE customer_master (
+    -> account_number int,
+    -> customer_number int,
+    -> first_name varchar(20),
+    -> last_name varchar(20),
+    -> account_opening_date date,
+    -> customer_city varchar(20));
+
+mysql> INSERT INTO customer_master VALUES (
+    -> 1122,101,'aaa','bbb','2020-01-26','chennai'),
+    -> (2233,102,'bbb','ccc','2020-02-04','madurai'),
+    -> (3344,103,'bbb','ccc','2020-02-05','madurai'),
+    -> (4455,104,'ccc','ddd','2020-03-10','theni'),
+    -> (5566,105,'ddd','eee','2020-02-16','chennai'),
+    -> (6677,106,'aaa','bbb','2020-05-20','ooty'),
+    -> (7788,107,'eee','ggg','2020-08-04','ooty');
+
+mysql> SELECT * FROM customer_master;
++----------------+-----------------+------------+-----------+------------------------+---------------+
+| account_number | customer_number | first_name | last_name | account_opening_date   | customer_city |
++----------------+-----------------+------------+-----------+------------------------+---------------+
+|           1122 |             101 | aaa        | bbb       | 2020-01-26             | chennai       |
+|           2233 |             102 | bbb        | ccc       | 2020-02-04             | madurai       |
+|           3344 |             103 | bbb        | ccc       | 2020-02-05             | madurai       |
+|           4455 |             104 | ccc        | ddd       | 2020-03-10             | theni         |
+|           5566 |             105 | ddd        | eee       | 2020-02-16             | chennai       |
+|           6677 |             106 | aaa        | bbb       | 2020-05-20             | ooty          |
+|           7788 |             107 | eee        | ggg       | 2020-08-04             | ooty          |
++----------------+-----------------+------------+-----------+------------------------+---------------+
+
+mysql> CREATE TABLE account_master (customer_number int);
+
+mysql> INSERT INTO account_master VALUES (101),(102),(103),(106),(107);
+
+mysql> SELECT * FROM account_master;
++-----------------+
+| customer_number |
++-----------------+
+|             101 |
+|             102 |
+|             103 |
+|             106 |
+|             107 |
++-----------------+
+
+mysql> CREATE TABLE loan_details (
+    -> customer_number int,
+    -> loan_amount varchar(10));
+
+mysql> INSERT INTO loan_details
+    -> VALUES (101,'1 lakh'),
+    -> (102,'2 lakhs'),
+    -> (103,'3 lakhs'),
+    -> (105,'5 lakhs'),
+    -> (106,'6 lakhs');
+
+mysql> SELECT * FROM loan_details;
++-----------------+-------------+
+| customer_number | loan_amount |
++-----------------+-------------+
+|             101 | 1 lakh      |
+|             102 | 2 lakhs     |
+|             103 | 3 lakhs     |
+|             105 | 5 lakhs     |
+|             106 | 6 lakhs     |
++-----------------+-------------+
+
+1) Write a query to display account number,customer_number,first_name,last_name,account_opening_date.
+Display the records sorted in ascending order based on account number.
+
+ANSWER : 
+
+mysql> SELECT account_number,am.customer_number,first_name,last_name,account_opening_date
+    -> FROM customer_master cm INNER JOIN account_master am
+    -> ON cm.customer_number=am.customer_number
+    -> ORDER BY account_number;
++----------------+-----------------+------------+-----------+----------------------+
+| account_number | customer_number | first_name | last_name | account_opening_date |
++----------------+-----------------+------------+-----------+----------------------+
+|           1122 |             101 | aaa        | bbb       | 2020-01-26           |
+|           2233 |             102 | bbb        | ccc       | 2020-02-04           |
+|           3344 |             103 | bbb        | ccc       | 2020-02-05           |
+|           6677 |             106 | aaa        | bbb       | 2020-05-20           |
+|           7788 |             107 | eee        | ggg       | 2020-08-04           |
++----------------+-----------------+------------+-----------+----------------------+
+
+2) Write a query to display the number of customer's from Chennai.Give the count an alias name of cus_count.
+
+ANSWER :
+
+mysql> SELECT count(customer_number) cus_count
+    -> FROM customer_master WHERE customer_city='chennai';
++-----------+
+| cus_count |
++-----------+
+|         2 |
++-----------+
+
+3) Write a query to display customer_number,first_name,account_number for the customer's whose accounts were created after 15th of any month.
+Display the records orted in ascending order based on customer number and then by account number.
+
+ANSWER : 
+
+mysql> SELECT am.customer_number,first_name,account_number
+    -> FROM customer_master cm INNER JOIN account_master am ON cm.customer_number=am.customer_number
+    -> WHERE extract(day from account_opening_date)>15
+    -> ORDER BY am.customer_number,account_number;
++-----------------+------------+----------------+
+| customer_number | first_name | account_number |
++-----------------+------------+----------------+
+|             101 | aaa        |           1122 |
+|             106 | aaa        |           6677 |
++-----------------+------------+----------------+
+
+4) Write a query to display the number of customers who have registration but no account in the bank.
+
+ANSWER :
+
+mysql> SELECT count(customer_number) Count_Master
+    -> FROM customer_master
+    -> WHERE customer_number NOT IN (SELECT customer_number FROM account_master);
++--------------+
+| Count_Master |
++--------------+
+|            2 |
++--------------+
+
+5) Write a query to display the firstname of the customer who have more than 1 account.Display the records in sorted order based on firstname.
+
+ANSWER :
+
+mysql> SELECT first_name
+    -> FROM customer_master cm INNER JOIN account_master am ON cm.customer_number=am.customer_number
+    -> GROUP BY first_name
+    -> HAVING COUNT(account_number)>1
+    -> ORDER BY first_name;
++------------+
+| first_name |
++------------+
+| aaa        |
+| bbb        |
++------------+
+
+6) Write a query to display the number of clients who have asked for loans but they don't have any account in the bank 
+through they are registered customers.Give the count an alias name of Count.
+
+ANSWER :
+
+mysql> SELECT COUNT(id.customer_number) Count
+    -> FROM customer_master cm INNER JOIN loan_details id ON cm.customer_number=id.customer_number
+    -> WHERE cm.customer_number
+    -> NOT IN(SELECT customer_number FROM account_master);
++-------+
+| Count |
++-------+
+|     1 |
++-------+
+
+7) Write a query to display the customer's first name who have multiple accounts(atleast 2 accounts).
+Display the records in ascending order based on customer's firstname.
+
+ANSWER :
+
+mysql> SELECT first_name
+    -> FROM customer_master cm INNER JOIN account_master am ON cm.customer_number=am.customer_number
+    -> GROUP BY first_name
+    -> HAVING COUNT(first_name)>=2
+    -> ORDER BY first_name;
++------------+
+| first_name |
++------------+
+| aaa        |
+| bbb        |
++------------+
