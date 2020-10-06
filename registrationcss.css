@@ -1,0 +1,40 @@
+body{  
+  font-family     : Calibri;  
+  background-color: lightgold;  
+}  
+.label {
+  display   : inline-block;
+  text-align: right;
+ 
+}
+.input {
+  display   : inline-block;
+  text-align: left;
+  width     : 70%;
+  height    : 21px;
+
+} 
+textarea {  
+  width  : 70%;
+  height : 50px;  
+  padding: 15px;        
+   
+}  
+   
+.button{
+background-color: green;
+cursor: pointer;
+color: white;
+width: 5%;
+height: 5%;
+font-size: 15px;
+ 
+}  
+.age {
+  width     : 18%;
+  height    : 21px;
+} 
+.phone {
+  width     : 55%;
+  height    : 21px;
+}

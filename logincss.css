@@ -1,0 +1,31 @@
+body {
+background-color: bisque;
+}
+.h1{
+font-family:Comic Sans Ms;
+color:brown;
+text-align:center;
+font-size:20pt;
+}
+.label{
+font-family:Comic Sans Ms;
+font-size: 18px;
+color:darkblue;
+}
+.button {
+font-family: Comic Sans Ms;
+background-color: green;
+cursor: pointer;
+color: white;
+width: 8%;
+height: 9%;
+font-size: 18px;
+border-radius: 50px;
+}
+input[type=text],input[type=password] {
+border-radius: 8px;
+height:25px;
+}
+input[type=text]:focus,input[type=password]:focus {
+background-color: silver;
+}
